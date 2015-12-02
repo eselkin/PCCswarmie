@@ -17,6 +17,10 @@
             <div class="row">
                     <div class="col-md-3" style="text-align:right"><%= child.author %> has <%= child.numresponses %> response(s)</div>
              </div>
+             <% if (user.isAdmin) { %>
+             <div class="row">
+                 <a href='/delete?id=<%=child.id%>'>delete this post (warning will delete all subposts)</a>
+             </div>
         </div>
     </div>
 <% }); %>

@@ -38,7 +38,7 @@ module.exports = function(passport){
                         newUser.secretQ = req.body.secretQ;
                         newUser.secretA = createHash(req.body.secretQ);
                         newUser.secretH = req.body.secretH;
-                        newUser.isAdmin = true;
+                        newUser.isAdmin = false;
                         newUser.dateC = new Date().getTime();
                         newUser.dateU = newUser.dateC;
                         // save the user

@@ -51,7 +51,7 @@ sequelize.sync();
 
 
 var isAuthenticated = function (req, res, next) {
-	// if user is authenticated in the session, call the next() to call the next request handler
+    // if user is authenticated in the session, call the next() to call the next request handler
     // Passport adds this method to request object. A middleware is allowed to add properties to
     // request and response objects
     if (req.isAuthenticated())
@@ -62,30 +62,76 @@ var isAuthenticated = function (req, res, next) {
 
 module.exports = function(passport){
 
-	/* GET login page. */
-	router.get('/', function(req, res) {
-    	// Display the Login page with any flash message, if any
+    /* GET login page. */
+    router.get('/', function(req, res) {
+        // Display the Login page with any flash message, if any
         // This will display all base bored boards without capacity to edit or post to them
         // No authentication for reading
-		res.render('index', { message: req.flash('message') });
-	});
+        res.render('index', { message: req.flash('message') });
+    });
 
-	router.get('/login', function(req, res) {
-    	// Display the Login page with any flash message, if any
-		res.render('login', { message: req.flash('message') });
+    router.get('/login', function(req, res) {
+        // Display the Login page with any flash message, if any
+        res.render('login', { message: req.flash('message') });
     });
 
     /* Handle Login POST */
-	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/post',
-		failureRedirect: '/',
-		failureFlash : true
-	}));
+    router.post('/login', passport.authenticate('login', {
+        successRedirect: '/post',
+        failureRedirect: '/',
+        failureFlash : true
+    }));
 
     router.get('/QA', isAuthenticated, function(req, res, next) {
         res.redirect('/post');
     }); // backward compatibility
 
+    
+    router.get('/delete', isAuthenticated, function(req, res, next){
+        if (req.query.id == undefined) {
+            res.redirect('/QA')
+        }
+        QADB.findOne(
+        {
+            where: { id: req.query.id }
+        }).then( function(postedit) {
+            // user tried to edit forceably, but was not user who wrote post
+            if (req.user.isAdmin == false) {
+                res.redirect('/QA')
+            }
+            // Can edit, because you are who you say you are
+            res.render('delete', {
+                user: req.user,
+                post: postedit,
+            });
+        },
+        function(error) {
+            myError = { status:404, message: "Could not find "};
+            next( myError );
+        })
+
+    });
+
+
+    router.post('/delete', isAuthenticated, function(req, res, next){
+        if (req.query.id == undefined || req.user.isAdmin == false) {
+            res.redirect('/QA');
+        }
+        // now we assume that the isAdmin is true and the id is a correct one
+        QADB.findOne({
+            where: { id: req.query.id }
+        }).then(function(post) {
+            post.destroy(); // delete the row now
+            QADB.findAll({
+                where: {childof: req.query.id}
+            }).then(function(childpost){
+                childpost.destroy(); // delete all the post's children
+            });
+        }, function(errorupdate){
+            res.redirect('/QA');
+        });
+    });
+    
     router.get('/edit', isAuthenticated, function(req, res, next){
         if (req.query.id == undefined) {
             res.redirect('/QA')
@@ -94,6 +140,7 @@ module.exports = function(passport){
         {
             where: { id: req.query.id }
         }).then( function(postedit) {
+            // user tried to edit forceably, but was not user who wrote post
             if (postedit.author != req.user.username) {
                 res.redirect('/QA')
             }
@@ -146,11 +193,10 @@ module.exports = function(passport){
     });
 
     /* GET posts or a post's page to post reply to */
-	router.get('/post', isAuthenticated, function(req, res, next){
+    router.get('/post', isAuthenticated, function(req, res, next){
         // This will allow for any child to be looked at as a parent for posting to
         // So we can navigate to the correct post this way with ?id=#id and then
         // post to it as a child
-
         off = (req.query.off == undefined)? 0: req.query.off; // offset to start returning
         lim = (req.query.lim == undefined)? 10: req.query.lim; // limit how many max
 
@@ -261,10 +307,10 @@ module.exports = function(passport){
     });
 
     /* Handle Logout */
-	router.get('/signout', function(req, res) {
-		req.logout();
-		res.redirect('/');
-	});
+    router.get('/signout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 
-	return router;
+    return router;
 }

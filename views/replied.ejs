@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <div class="jumbotron">
     <div class="container">
         <div class="row">
@@ -14,9 +15,13 @@
             <div class="col-md-8"><%= post.url %></div>
         </div>
         <div class="row">
-            <div class="col-md-6"><%= post.author %></div>
-            <div class="col-md-2"><%= post.numrepsonses %></div>
+            <div class="col-md-6">author <%= post.author %> has <%= post.numrepsonses %> responses</div>
         </div>
+        <% if (user.isAdmin) { %>
+        <div class="row">
+             <a href='/delete?id=<%=post.id%>'>delete this post (warning will delete all subposts)</a>
+        </div>
+        <% } %>
     </div>
 </div>
 <div class="jumbotron">
@@ -38,5 +43,10 @@
             <div class="col-md-6"><%= addPost.author %></div>
             <div class="col-md-2"><%= addPost.numrepsonses %></div>
         </div>
-    </div>
+        <% if (user.isAdmin) { %>
+        <div class="row">
+             <a href='/delete?id=<%=addPost.id%>'>delete this post (warning will delete all subposts)</a>
+        </div>
+        <% } %>
+</div>
 </div>

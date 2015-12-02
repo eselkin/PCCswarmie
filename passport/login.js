@@ -27,6 +27,7 @@ module.exports = function(passport){
                     }
                     // User and password both match, return user from done method
                     // which will be treated like success
+                    req.body.a = user.isAdmin; // add to req the parameter saying we are admin, but keep it hidden
                     return done(null, user);
                 }
             );
