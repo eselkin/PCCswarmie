@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<% include partials/style.ejs %>
+<html >
+    <head>
+        <title> PCC Swarmies </title>
+    </head>
+    <body>
+        <% var current="signup"%>
+        <h1>PCC Swarmies<small> register for an account</small></h1>
+        <% include partials/navbar.ejs %>
+        <div class="registerSignup">
+            <form id="registerForm" action="/signup" method="POST" class="form-horizontal">
+                <div class="form-group">
+                    <div class="trt col-xs-3 col-md-3"><label for="username">desired username:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="username" class="form-control" name="username" id="username"></div>
+                </div>
+                <div class="form-group">
+                    <div class="trt col-xs-3 col-md-3"><label for="email">e-mail:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="email" class="form-control" name="email" id="email"></div>
+                </div>
+                <div class="form-group">
+                    <div class="trt col-xs-3 col-md-3"><label for="password">password:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="password" class="form-control" name="password" id="password"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-3 col-md-3 trt"><label for="fnameInput">first:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="text" class="form-control" name="fnameInput" id="fnameInput"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-3 col-md-3 trt"><label for="lnameInput">last:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="text" class="form-control" name="lnameInput" id="lnameInput"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-3 col-md-3 trt"><label for="secretQ">secret Question:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="text" class="form-control" name="secretQ" id="secretQ"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-3 col-md-3 trt"><label for="secretA">secret Answer:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="password" class="form-control" name="secretA" id="secretA"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-3 col-md-3 trt"><label for="secretH">secret Hint:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="text" class="form-control" name="secretH" id="secretH"></div>
+                </div>
+                <div class="registerButtons">
+                    <button type="submit" class="btn btn-info">register</button>
+                    <button type="cancel" class="btn btn-danger">cancel</button>
+                </div>
+		<div calss="col-xs-3 col-md-3 trt">
+		<label><span id="valid"></span></label>
+		<div>
+            </form>
+        </div>
+        <% include partials/scripts.ejs %>
+    </body>
+<script>
+	$(function(){
+		$('#registerForm').submit(function(event) {
+			if ($('#email').val().indexOf("pasadena.edu") == -1){
+				event.preventDefault();
+				$('#valid').text("e-mail must be a pasadena.edu account").show().fadeOut(4000);
+				return false;
+			} else {
+				$('#registerForm').submit();
+				return true;
+			}
+		});
+	});
+</script>
+</html>

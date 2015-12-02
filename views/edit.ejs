@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<% include partials/style.ejs %>
+<html>
+    <head>
+        <title> PCC Swarmies </title>
+    </head>
+    <body>
+        <% var current="Edit" %>
+        <h1>PCC Swarmies<small> bulletin board </small></h1>
+        <% include partials/navbar2.ejs %>
+        <div id="successfailure"></div>
+        <div class="addPost">
+            <form id="addPost" name="addPost">
+                <input type="hidden" id="id" name="id" value="<%= post.id %>">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label for="formtitle">Edit post?</label>
+                        </div>
+                        <div class="col-md-8">
+                                <input type="text" class="form-control" id="formtitle" name="formtitle" value="<%=post.title%>" maxlength="90">
+                        </div>
+                        <div class="col-md-1 qachar" id="titlechars"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label for="textbody">Subject or question?</label>
+                        </div>
+                        <div class="col-md-8">
+                            <textarea class="form-control" rows="3" id="formtextbody" name="formtextbody" placeholder="topic..." maxlength="700"><%=post.textbody%></textarea>
+                        </div>
+                        <div class="col-md-1 qachar" id="bodychars"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label for="formlinks">links:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="url" class="form-control" id="formlinks" name="formlinks" value="<%=post.url%>">
+                        </div>
+                       <div class="col-md-1 qachar" id="linkchars"></div>
+                   </div>
+                </div>
+                <div class="registerButtons">
+                    <button type="submit" class="btn btn-info">submit</button>
+                    <button type="cancel" id="cancel" name="cancel" class="btn btn-danger">cancel</button>
+                </div>
+            </form>
+        </div>
+       <% include partials/scripts.ejs %>
+       <script>
+
+
+        $(document).ready( function() {
+            $('#addPost').submit( function(event) {
+                event.preventDefault();
+                var tBody = $('#formtextbody').val();
+                var tTitle = $('#formtitle').val();
+                var tLinks = $('#formlinks').val();
+                /* Act on the event */
+                /* Other pattern checking can happen here XXX */
+                if (tBody != "" && tTitle != "") {
+                    // only create ajax request if complete
+                    sendRequest(tBody, tTitle, tLinks);
+                }
+            });
+
+            function sendRequest(tBody, tTitle, tLinks) {
+                var urltosend  = "/edit?id="+$("#id").val()
+                console.log('getting triggered'+urltosend);
+                $.ajax({
+                    url: urltosend,
+                    type: 'POST',
+                    data:{
+                        title: tTitle,
+                        textbody: tBody,
+                        links: tLinks
+                    }
+                }).done( function(data) {
+                    console.log('do we get success?');
+                    location.href="/post?id="+$("#id").val()
+                    return true;
+                }).fail( function(error) {
+                    $("#successfailure").html("<a href='/qa'><p class='text-warning'>cannot edit!</p></a>");
+                    return false;
+                });
+            }
+
+            var charsLeftBody=0;
+            var charsLeftTitle=0;
+            var charsLeftLinks=0;
+            var calcCharsLeft = function() {
+                charsLeftBody = 700  - $('#formtextbody').val().length;
+                charsLeftTitle = 90  - $('#formtitle').val().length;
+                charsLeftLinks = 300 - $('#formlinks').val().length;
+                $('#titlechars').text(charsLeftTitle+"/90");
+                $('#linkchars').text(charsLeftLinks+"/300");
+                $('#bodychars').text(charsLeftBody+"/700");
+            };
+
+            $('#formtextbody').keyup(function() {
+                calcCharsLeft();
+            });
+
+            $('#formtitle').keyup(function() {
+                calcCharsLeft();
+            });
+
+            $('#formlinks').keyup(function() {
+                calcCharsLeft();
+            });
+
+
+            function getParameterByName(name) {
+               name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+        });
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<% include partials/style.ejs %>
+<html>
+    <head>
+        <title> PCC Swarmies </title>
+    </head>
+    <body>
+        <h1>PCC Swarmies <small> log in to your account </small></h1>
+        <% var current="login" %>
+        <% include partials/navbar.ejs %>
+        <div class="registerSignup">
+            <form id="login" action="/login" method="POST">
+                <div class="form-group">
+                    <div class="trt col-xs-3 col-md-3"><label for="username">username:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="username" class="form-control" name="username" id="username"></div>
+                </div>
+                <div class="form-group">
+                    <div class="trt col-xs-3 col-md-3"><label for="password">password:</label></div>
+                    <div class="col-xs-9 col-md-9"><input type="password" class="form-control" name="password" id="password"></div>
+                </div>
+                <div class="registerButtons">
+                    <button type="submit" class="btn btn-info">login</button>
+                    <button type="cancel" class="btn btn-danger">cancel</button>
+                </div>
+            </form>
+        </div>
+        <% include partials/scripts.ejs %>
+    </body>
+</html>

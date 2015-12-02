@@ -1,0 +1,22 @@
+<% children.forEach(function(child) {%>
+    <div class="post" onclick="location.href='/post?id=<%= child.id %>&lim=<%= limit %>';">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="text-warning"><%= child.title %></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="text-primary"><%= child.textbody %></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8"><a href="<%= child.url %>"><%= child.url %></a></div>
+            </div>
+            <div class="row">
+                    <div class="col-md-3" style="text-align:right"><%= child.author %> has <%= child.numresponses %> response(s)</div>
+             </div>
+        </div>
+    </div>
+<% }); %>

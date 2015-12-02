@@ -1,0 +1,13 @@
+<nav class="navbar">
+    <ul class="nav nav-tabs">
+        <li <% if (current == "QA") { %>class="active"<% } %> ><a href="/QA" >Q&amp;A</a></li>
+        <li  <% if (current == "login") { %>class="active"<% } %> ><a href="/login" >Sign in</a></li>
+        <li <% if (current == "signup") { %>class="active"<% } %> ><a href="/signup">Signup</a></li>
+        <% if (user.isAdmin == true) { %>
+            <li <% if (current == "users") { %> class="active" <% } %> ><a href="/users">Users</a></li>
+        <% } %>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li> <a href="/signout">Logged in as <%- user.username %></a></li>
+    </ul>
+</nav>

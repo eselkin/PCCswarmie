@@ -1,0 +1,39 @@
+<% include partials/style.ejs %>
+<html>    
+<head>
+        <title> PCC Swarmies </title>
+    </head>
+    <body>
+        <% var current="users" %>
+        <h1>PCC Swarmies <small> user list </small></h1>
+        <% include partials/navbar2.ejs %>
+        <table class = "table table-hover">
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>First</th>
+                <th>Last</th>
+                <th>Secret Q</th>
+                <th>Secret H</th>
+                <th>Date C</th>
+                <th>Date U</th>
+            </tr>
+            <% i = 0; %>
+            <% users.forEach(function(user_info) { %>
+            <tr>
+                <td><% (display + i) %></td>
+                <td><mark><%= user_info.username %></mark></td>
+                <td><%= user_info.email %></td>
+                <td><%= user_info.fNameInput %></td>
+                <td><%= user_info.lNameInput %></td>
+                <td><%= user_info.secretQ %></td>
+                <td><%= user_info.secretH %></td>
+                <td><%= user_info.dateC %></td>
+                <td><%= user_info.dateU %></td>
+            </tr>
+            <% }); %>
+        </table>
+        <% include partials/scripts.ejs %>
+    </body>
+</html>
